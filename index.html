@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f2">
+  <meta name="description" content="NowPlace — compartilhe seu momento e descubra o que acontece por perto.">
+  <title>NowPlace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="brand-home" aria-label="NowPlace início">
+      <span class="brand-symbol" aria-hidden="true">●</span>
+      <span class="brand-name">now<span>place</span></span>
+    </a>
+    <div class="topbar-actions">
+      <div class="api-presence" id="api-presence"><span class="presence-dot"></span><span id="api-status-label">Conectando API</span></div>
+      <div id="user-chip" class="user-chip" hidden>
+        <span class="user-avatar" id="user-avatar">N</span>
+        <strong id="user-name"></strong>
+        <button id="btn-logout" class="logout-button" type="button" aria-label="Sair" title="Sair">↗</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="screen-login" class="login-screen">
+      <div class="login-intro">
+        <p class="eyebrow">NOWPLACE</p>
+        <h1>Onde você está?<br><span>O que está rolando?</span></h1>
+        <p class="login-description">Registre seu momento com duas fotos e veja o que acontece por perto.</p>
+        <div class="photo-samples" aria-label="Duas fotos por publicação">
+          <div class="sample sample-place"><span>01</span><strong>Ambiente</strong></div>
+          <div class="sample sample-selfie"><span>02</span><strong>Selfie</strong></div>
+        </div>
+      </div>
+      <div class="login-card">
+        <h2>Entrar no NowPlace</h2>
+        <p>Use seu nome para continuar.</p>
+        <form id="login-form">
+          <label for="login-name">Nome de usuário</label>
+          <input id="login-name" type="text" maxlength="30" required autocomplete="nickname" placeholder="Ex.: Nicolas">
+          <button class="btn btn-primary btn-full" type="submit">Continuar <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+    </section>
+
+    <section id="screen-app" class="app-screen" hidden>
+      <div class="workspace-heading">
+        <div><p class="eyebrow">SEU ESPAÇO</p><h1 id="workspace-title">Novo Now</h1></div>
+        <nav class="tabs" aria-label="Seções">
+          <button id="tab-new" class="tab active" type="button">Novo Now</button>
+          <button id="tab-feed" class="tab" type="button">Por perto</button>
+        </nav>
+      </div>
+
+      <section id="panel-new" class="panel">
+        <div id="capture-intro" class="card capture-intro">
+          <div class="card-heading"><div><p class="eyebrow">NOVA PUBLICAÇÃO</p><h2>Registre seu momento</h2></div></div>
+          <p class="muted">Tire uma foto do lugar e depois uma selfie.</p>
+          <div class="step-list">
+            <div class="step-item"><span>1</span><div><strong>Ambiente</strong><small>Mostre onde você está</small></div></div>
+            <div class="step-item"><span>2</span><div><strong>Selfie</strong><small>Registre você também</small></div></div>
+          </div>
+          <button id="btn-start" class="btn btn-primary" type="button">Abrir câmera <span aria-hidden="true">→</span></button>
+        </div>
+
+        <div id="capture-live" class="card capture-live" hidden>
+          <div class="section-title"><div><p class="eyebrow">FOTO <span id="capture-step-count">01</span>/02</p><h2 id="capture-step">Foto do ambiente</h2><p id="capture-help" class="muted">Enquadre o lugar onde você está.</p></div><span class="live-indicator">Câmera ativa</span></div>
+          <div class="camera-layout">
+            <div class="video-wrap"><video id="video" autoplay playsinline muted></video><span id="camera-overlay-label" class="video-label">AMBIENTE</span></div>
+            <div class="camera-side">
+              <div class="step-list compact">
+                <div id="camera-step-environment" class="step-item active"><span>1</span><div><strong>Ambiente</strong><small>Primeira foto</small></div></div>
+                <div id="camera-step-selfie" class="step-item"><span>2</span><div><strong>Selfie</strong><small>Segunda foto</small></div></div>
+              </div>
+              <div class="button-row"><button id="btn-capture" class="btn btn-primary" type="button">Capturar foto</button><button id="btn-cancel" class="btn btn-light" type="button">Cancelar</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="capture-review" class="card review-panel" hidden>
+          <div class="section-title"><div><p class="eyebrow">REVISÃO</p><h2>Confira as fotos</h2></div></div>
+          <div class="previews">
+            <figure><img id="prev-environment" alt="Foto do ambiente"><figcaption>Ambiente</figcaption></figure>
+            <figure><img id="prev-selfie" alt="Selfie"><figcaption>Selfie</figcaption></figure>
+          </div>
+          <div class="description-field"><label for="description">O que você está fazendo?</label><input id="description" type="text" maxlength="500" placeholder="Ex.: Estudando no café"><small class="field-counter"><span id="description-count">0</span>/500</small></div>
+          <div class="location-box" aria-label="Localização da publicação">
+            <div class="location-icon" aria-hidden="true">⌖</div>
+            <div class="location-content">
+              <strong>Localização</strong>
+              <p id="location-status" role="status" aria-live="polite">Obtendo localização do dispositivo…</p>
+              <small id="location-coordinates"></small>
+            </div>
+            <button id="btn-location" class="btn btn-light" type="button">Tentar novamente</button>
+          </div>
+          <div class="review-actions"><button id="btn-retake" class="btn btn-light" type="button">Refazer fotos</button><button id="btn-publish" class="btn btn-primary" type="button">Publicar Now</button></div>
+        </div>
+
+        <div id="publish-done" class="card publish-done" hidden>
+          <div class="success-icon" aria-hidden="true">✓</div><h2>Now publicado</h2><p id="publish-done-place" class="muted"></p>
+          <div class="button-row"><button id="btn-new-now" class="btn btn-light" type="button">Novo Now</button><button id="btn-go-feed" class="btn btn-primary" type="button">Ver por perto</button></div>
+        </div>
+      </section>
+
+      <section id="panel-feed" class="panel" hidden>
+        <div id="feed-locked" class="card feed-locked" hidden>
+          <h2>Desbloqueie o feed</h2><p class="muted">Publique um Now para ver publicações próximas durante 24 horas.</p>
+          <button id="btn-locked-new" class="btn btn-primary" type="button">Criar um Now</button>
+        </div>
+        <div id="feed-unlocked" hidden>
+          <form id="radius-form" class="card radius-card">
+            <div><label for="radius">Raio de busca</label><p class="muted">Distância máxima: <strong><span id="radius-value">5</span> km</strong></p></div>
+            <input id="radius" type="range" min="1" max="100" value="5">
+            <button class="btn btn-primary" type="submit">Buscar</button>
+          </form>
+          <p id="feed-unlock-info" class="muted feed-unlock-info"></p>
+          <p id="feed-status" class="status" role="status" aria-live="polite"></p>
+          <div id="feed-list" class="feed"></div>
+        </div>
+      </section>
+      <footer class="footer">NowPlace · SA2 · Programação Front-End</footer>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <canvas id="canvas" hidden></canvas>
+  <script defer src="script.js"></script>
+</body>
+</html>
